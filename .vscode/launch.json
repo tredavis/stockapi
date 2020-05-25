@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-StockapiApplication<stockapi>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.example.stockapi.StockapiApplication",
+            "projectName": "stockapi",
+            "args": ""
+        }
+    ]
+}
