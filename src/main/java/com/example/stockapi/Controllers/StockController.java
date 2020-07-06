@@ -1,8 +1,9 @@
-package com.example.stockapi;
+package com.example.stockapi.Controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.stockapi.Models.GlobalQuote;
@@ -26,11 +27,17 @@ public class StockController {
     @GetMapping
     @RequestMapping("/search-ticker/{id}")
     public List<Tickers> searchTicker(@PathVariable final String id) {
+        List<Tickers> searchList = new ArrayList<>();
 
-        final StockSearches response = restTemplate.getForObject(String.format(
-                "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=%s&apikey=VTPCO5SG7C08XOT5", id),
-                StockSearches.class);
-        final List<Tickers> searchList = response.GrabMatches();
+        try{
+            final StockSearches response = restTemplate.getForObject(String.format(
+                    "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=%s&apikey=VTPCO5SG7C08XOT5", id),
+                    StockSearches.class);
+            searchList = response.GrabMatches();
+
+        } catch(Exception ex) {
+
+        }
 
         return searchList;
     }
