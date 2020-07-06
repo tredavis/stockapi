@@ -73,20 +73,6 @@ public class StockController {
         return quote;
     }
 
-/*    // Route to grab ema
-    @RequestMapping("/grab-ema/{symbol}")
-    public List<EMA> grabEma(@PathVariable final String symbol) {
-
-        return Indicators.Extract(restTemplate, symbol);
-    }
-
-    // Route to grab macd information
-    @RequestMapping("/grab-macd/{symbol}")
-    public List<MACD> grabMacd(@PathVariable final String symbol) {
-        log.info("Grabbing MACD for symbol: " + symbol);
-        return Indicators.ExtractMACD(restTemplate, symbol);
-    }*/
-
     // Route to grab information about the sector
     @RequestMapping("/grab-sector")
     public String grabSector() {
