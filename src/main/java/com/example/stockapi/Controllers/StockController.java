@@ -1,5 +1,9 @@
 package com.example.stockapi.Controllers;
 
+
+import com.example.stockapi.Constants.ApplicationConstants;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -11,34 +15,41 @@ import com.example.stockapi.Models.StockSearches;
 import com.example.stockapi.Models.Tickers;
 import com.example.stockapi.Models.SubModels.EMA;
 import com.example.stockapi.Models.SubModels.MACD;
-import com.example.stockapi.Utilities.Extractor;
+import com.example.stockapi.Utilities.Indicators;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@Slf4j
 @RestController
 @RequestMapping("stock")
 public class StockController {
+
+    @Autowired
+    private ApplicationConstants applicationConstants;
+
+    @Autowired
+    private Indicators indicators;
 
     RestTemplate restTemplate = new RestTemplate();
 
     // Search for quotes.
     @GetMapping
-    @RequestMapping("/search-ticker/{id}")
-    public List<Tickers> searchTicker(@PathVariable final String id) {
+    @RequestMapping("/search-ticker/{symbol}")
+    public List<Tickers> searchTicker(@PathVariable final String symbol) {
+        log.info("Grabbing Quote for ticker symbol: " + symbol);
         List<Tickers> searchList = new ArrayList<>();
 
         try{
-            final StockSearches response = restTemplate.getForObject(String.format(
-                    "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=%s&apikey=VTPCO5SG7C08XOT5", id),
-                    StockSearches.class);
+            final StockSearches response = restTemplate.getForObject(String.format(applicationConstants.AV_SYMBOL_SEARCH , symbol), StockSearches.class);
             searchList = response.GrabMatches();
 
         } catch(Exception ex) {
-
+            log.error("There was an exception grabbing the data searching for the ticket: " + ex.getMessage());
         }
 
+        log.info("Completed grabbing Quote for ticket symbol: " + symbol);
         return searchList;
     }
 
@@ -46,26 +57,35 @@ public class StockController {
     @GetMapping
     @RequestMapping("/grab-quote/{symbol}")
     public GlobalQuote getQuote(@PathVariable final String symbol) {
+        log.info("Grabbing Quote for ticker symbol: " + symbol);
 
-        final GlobalQuote quote = restTemplate.getForObject(String.format(
-                "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=%s&apikey=VTPCO5SG7C08XOT5", symbol),
-                GlobalQuote.class);
+        GlobalQuote quote = new GlobalQuote();
+        try{
+            quote = restTemplate.getForObject(String.format(applicationConstants.AV_GLOBAL_QUOTE, symbol), GlobalQuote.class);
+            quote.emaList = indicators.ExtractDailyEMA10(restTemplate, symbol);
+            quote.macdList = indicators.ExtractDailyMACD(restTemplate, symbol);
 
+        } catch(Exception ex){
+            log.error("There was an exception grabbing the quote for ticker: " + symbol + " Execption: " + ex.getMessage());
+        }
+
+        log.info("Completed grabbing Quote for ticket symbol: " + symbol);
         return quote;
     }
 
-    // Route to grab ema
+/*    // Route to grab ema
     @RequestMapping("/grab-ema/{symbol}")
     public List<EMA> grabEma(@PathVariable final String symbol) {
-        return Extractor.ExtractEMA(restTemplate, symbol);
+
+        return Indicators.Extract(restTemplate, symbol);
     }
 
     // Route to grab macd information
     @RequestMapping("/grab-macd/{symbol}")
     public List<MACD> grabMacd(@PathVariable final String symbol) {
-
-        return Extractor.ExtractMACD(restTemplate, symbol);
-    }
+        log.info("Grabbing MACD for symbol: " + symbol);
+        return Indicators.ExtractMACD(restTemplate, symbol);
+    }*/
 
     // Route to grab information about the sector
     @RequestMapping("/grab-sector")

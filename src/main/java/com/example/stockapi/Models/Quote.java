@@ -2,8 +2,10 @@ package com.example.stockapi.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.ToString;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@ToString
 public class Quote {
     
     @JsonProperty("01. symbol")
