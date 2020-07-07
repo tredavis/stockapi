@@ -1,26 +1,28 @@
 package com.example.stockapi.Models.SubModels;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@Data
 public class MACD {
 
     @JsonProperty("day")
-    private String Day = "";
+    private String day = "";
 
     @JsonProperty("macd")
-    private String MacdValue = "";
+    private String macdValue = "";
     
     @JsonProperty("macdHist")
-    private String MacdHist = "";
+    private String macdHist = "";
 
     @JsonProperty("macdSignal")
-    private String MacdSignal = "";
+    private String macdSignal = "";
 
-    public MACD (String day, String macd_value, String macd_hist, String macd_signal) {
-        Day = day;
-        MacdValue = macd_value;
-        MacdHist = macd_hist;
-        MacdSignal = macd_signal;
+    public MACD (String day, String macdValue, String macdHist, String macdSignal) {
+        this.day = day;
+        this.macdValue = macdValue;
+        this.macdHist = macdHist;
+        this.macdSignal = macdSignal;
     }
 
 }

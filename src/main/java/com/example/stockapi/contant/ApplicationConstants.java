@@ -1,4 +1,4 @@
-package com.example.stockapi.Constants;
+package com.example.stockapi.contant;
 
 import org.springframework.stereotype.Component;
 

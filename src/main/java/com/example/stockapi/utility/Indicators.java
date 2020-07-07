@@ -1,12 +1,11 @@
-package com.example.stockapi.Utilities;
+package com.example.stockapi.utility;
 
-import java.lang.reflect.Executable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.example.stockapi.Constants.ApplicationConstants;
+import com.example.stockapi.contant.ApplicationConstants;
 import com.example.stockapi.Models.SubModels.EMA;
 import com.example.stockapi.Models.SubModels.MACD;
 
