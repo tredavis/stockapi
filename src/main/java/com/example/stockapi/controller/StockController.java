@@ -3,19 +3,22 @@ package com.example.stockapi.controller;
 
 import com.example.stockapi.contant.ApplicationConstants;
 import com.example.stockapi.dao.GlobalQuoteDao;
+import com.example.stockapi.dao.SymbolDao;
+import com.example.stockapi.entity.Symbol;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.stockapi.Models.GlobalQuote;
-import com.example.stockapi.Models.StockSearches;
-import com.example.stockapi.Models.Tickers;
+import com.example.stockapi.entity.GlobalQuote;
+import com.example.stockapi.models.StockSearches;
+import com.example.stockapi.models.Tickers;
 import com.example.stockapi.utility.Indicators;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +39,19 @@ public class StockController {
     @Autowired
     private GlobalQuoteDao globalQuoteDao;
 
+    @Autowired
+    private SymbolDao symbolDao;
+
     RestTemplate restTemplate = new RestTemplate();
+
+    @RequestMapping("/")
+    public String init() {
+        log.info("Loading in the info for the symbols: " + new Timestamp(System.currentTimeMillis()));
+        List<Symbol> symbols = symbolDao.grabUniqueSymbolsFromDb();
+        log.info("Finished loading in the info for the ticker symbols: " + new Timestamp(System.currentTimeMillis()));
+        return "Route to grab sector";
+    }
+
 
     // Search for quotes.
     @GetMapping
@@ -77,13 +92,13 @@ public class StockController {
 
         // if we don't have an entry grab the information externally, save and return this data.
         try{
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDateTime now = LocalDateTime.now();
 
             // retrieve stock quote information
             quote = restTemplate.getForObject(String.format(applicationConstants.AV_GLOBAL_QUOTE, symbol), GlobalQuote.class);
             quote.tickerSymbol = symbol;
-            quote.emaList = indicators.ExtractDailyEMA10(restTemplate, symbol);
+            quote.emaList = indicators.ExtractDailyEMA20(restTemplate, symbol);
             quote.macdList = indicators.ExtractDailyMACD(restTemplate, symbol);
             quote.recordedDate = dtf.format(now);
 

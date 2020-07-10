@@ -1,4 +1,4 @@
-package com.example.stockapi.Models;
+package com.example.stockapi.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

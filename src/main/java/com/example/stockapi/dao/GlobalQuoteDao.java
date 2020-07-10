@@ -1,7 +1,7 @@
 package com.example.stockapi.dao;
 
-import com.example.stockapi.Models.GlobalQuote;
-import com.example.stockapi.Repository.QuoteRepository;
+import com.example.stockapi.entity.GlobalQuote;
+import com.example.stockapi.repository.QuoteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -51,14 +51,15 @@ public class GlobalQuoteDao {
     public GlobalQuote getQuoteByTickerAndDate(String symbol) {
         log.info("Attempting getQuoteByTickerAndDate from db -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
         GlobalQuote globalQuote = new GlobalQuote();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDateTime now = LocalDateTime.now();
 
         try {
             List<GlobalQuote> result = mongoTemplate.query(GlobalQuote.class)
-                    .matching(Query.query(where("recordedDate").is(dtf.format(now))))
+                    .matching(Query.query(where("recordedDate").is(dtf.format(now)).and("tickerSymbol").is(symbol)))
                     .all();
 
+            // did we find any?
             if(result.size() > 0){
                log.info("quote was found returning...");
                globalQuote = result.get(0);

@@ -1,4 +1,4 @@
-package com.example.stockapi.Models.SubModels;
+package com.example.stockapi.models.subModels;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
