@@ -15,6 +15,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 import com.example.stockapi.entity.GlobalQuote;
 import com.example.stockapi.models.StockSearches;
@@ -46,9 +48,19 @@ public class StockController {
 
     @RequestMapping("/")
     public String init() {
-        log.info("Loading in the info for the symbols: " + new Timestamp(System.currentTimeMillis()));
-        List<Symbol> symbols = symbolDao.grabUniqueSymbolsFromDb();
-        log.info("Finished loading in the info for the ticker symbols: " + new Timestamp(System.currentTimeMillis()));
+        CompletableFuture<List<Symbol>> completableFuture = CompletableFuture.supplyAsync(new Supplier<List<Symbol>>() {
+            @Override
+            public List<Symbol> get() {
+                log.info("Loading in the info for the symbols: " + new Timestamp(System.currentTimeMillis()));
+                List<Symbol> symbols = symbolDao.grabUniqueSymbolsFromDb();
+
+                for (int i = 0; i < symbols.size(); i++) {
+                    log.info("Symbol name - " + symbols.get(i));
+                }
+                log.info("Finished loading in the info for the ticker symbols: " + new Timestamp(System.currentTimeMillis()));
+                return symbols;
+            }
+        });
         return "Route to grab sector";
     }
 

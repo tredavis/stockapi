@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class SymbolDao {
+public  class SymbolDao {
 
     private SymbolRepository symbolRepository;
 
