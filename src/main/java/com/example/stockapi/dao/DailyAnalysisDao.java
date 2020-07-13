@@ -4,9 +4,12 @@ package com.example.stockapi.dao;
 import com.example.stockapi.entity.DailyAnalysis;
 import com.example.stockapi.entity.GlobalQuote;
 import com.example.stockapi.entity.Symbol;
+import com.example.stockapi.models.DailyQuote;
 import com.example.stockapi.repository.DailyAnalysisRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
@@ -17,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.ignoreCase;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Slf4j
@@ -38,13 +42,20 @@ public class DailyAnalysisDao {
     public void save(DailyAnalysis dailyAnalysis) {
         log.info("Attempting to save the Daily Analysis to the database -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
         try {
-            dailyAnalysisRepository.save(dailyAnalysis);
+
+            // do we already have a batch for the day
+            DailyAnalysis da = this.grabBatchForProcessing();
+
+            if(da == null) {
+                dailyAnalysisRepository.save(dailyAnalysis);
+            } else {
+                log.info("This daily analysis is already present in the table " + " -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
+            }
         } catch (Exception ex){
             log.error("There was an issue saving the daily analysis to the database: " + ex.getMessage()+ " -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
         }
         log.info("Finished saving the Daily Analysis to the database -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
     }
-
 
     public DailyAnalysis grabBatchForProcessing () {
         log.info("Attempting to grabBatchForProcessing DailyAnalysis from the db -- Timestamp: " + new Timestamp(System.currentTimeMillis()));

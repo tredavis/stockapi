@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -156,6 +157,14 @@ public class AnalyzeTask extends TimerTask {
                             }
                         }
                     }
+                }
+
+                //sleep for a minute
+                try {
+                    TimeUnit.MILLISECONDS.sleep(60000L);
+                    log.info("Still processing but asleep for a minute");
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
