@@ -101,11 +101,16 @@ public class AnalyzeTask extends TimerTask {
                     Rating rating;
                     Trend currentTrend = Trend.NUETRAL;
 
+
                     // analyze the MACD list first
                     // walk backwards and first search for the lowest and highest points.
                     // if you hit a value that is neither the highest or lowest point. Then we have a point of interest.
                     //
                     for (int m = 0; m < quote.macdList.size(); m++) {
+                        // we need to break before we hit an index out of bounds exception
+                        if((m+1) == quote.macdList.size()){
+                            break;
+                        }
                         MACD current = quote.macdList.get(m);
                         MACD previousDay = quote.macdList.get(m + 1);
 
@@ -149,11 +154,6 @@ public class AnalyzeTask extends TimerTask {
                             else if (currentValue <= previousValue) {
 
                             }
-                        }
-
-                        // we need to break before we hit an index out of bounds exception
-                        if((m+1) == quote.macdList.size()){
-                            break;
                         }
                     }
                 }
