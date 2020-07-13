@@ -1,4 +1,4 @@
-package com.example.stockapi.Models.SubModels;
+package com.example.stockapi.models.subModels;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -13,7 +13,7 @@ public class MACD {
     private String macdValue = "";
     
     @JsonProperty("macdHist")
-    private String macdHist = "";
+    public String macdHist = "";
 
     @JsonProperty("macdSignal")
     private String macdSignal = "";

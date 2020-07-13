@@ -1,13 +1,13 @@
-package com.example.stockapi.Models;
+package com.example.stockapi.entity;
 
-import com.example.stockapi.Models.SubModels.EMA;
-import com.example.stockapi.Models.SubModels.MACD;
+import com.example.stockapi.models.Quote;
+import com.example.stockapi.models.subModels.EMA;
+import com.example.stockapi.models.subModels.MACD;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

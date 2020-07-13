@@ -1,4 +1,4 @@
-package com.example.stockapi.Models;
+package com.example.stockapi.models;
 
 import java.util.ArrayList;
 import java.util.List;
