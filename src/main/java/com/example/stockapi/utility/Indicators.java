@@ -36,7 +36,7 @@ public class Indicators {
         log.info("Grabbing Daily MACD for ticker symbol: " + symbol + "Timestamp -- " + timeStamp);
 
         List<MACD> returnList = new ArrayList<MACD>();
-        final String MACDURL = String.format(applicationConstants.AV_MACD_DAILY, symbol);
+        final String MACDURL = String.format(ApplicationConstants.AV_MACD_DAILY, symbol);
 
         try {
 
@@ -101,7 +101,7 @@ public class Indicators {
         log.info("Grabbing Daily EMA(20) for ticker symbol: " + symbol + "Timestamp -- " + timeStamp);
 
         List<EMA> returnList = new ArrayList<EMA>();
-        final String EMAURL = String.format(applicationConstants.AV_EMA_10, symbol);
+        final String EMAURL = String.format(ApplicationConstants.AV_EMA_10, symbol);
 
         try {
             final ResponseEntity<String> response = restTemplate.getForEntity(EMAURL + "/1", String.class);
@@ -164,7 +164,7 @@ public class Indicators {
         log.info("Grabbing Daily EMA(20) for ticker symbol: " + symbol + "Timestamp -- " + timeStamp);
 
         List<EMA> returnList = new ArrayList<EMA>();
-        final String EMAURL = String.format(applicationConstants.AV_EMA_20, symbol);
+        final String EMAURL = String.format(ApplicationConstants.AV_EMA_20, symbol);
 
         try {
             final ResponseEntity<String> response = restTemplate.getForEntity(EMAURL + "/1", String.class);

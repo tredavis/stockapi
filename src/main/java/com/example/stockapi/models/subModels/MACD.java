@@ -13,7 +13,7 @@ public class MACD {
     private String macdValue = "";
     
     @JsonProperty("macdHist")
-    private String macdHist = "";
+    public String macdHist = "";
 
     @JsonProperty("macdSignal")
     private String macdSignal = "";

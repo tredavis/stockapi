@@ -5,8 +5,6 @@ import com.example.stockapi.contant.ApplicationConstants;
 import com.example.stockapi.dao.DailyAnalysisDao;
 import com.example.stockapi.dao.GlobalQuoteDao;
 import com.example.stockapi.dao.SymbolDao;
-import com.example.stockapi.entity.DailyAnalysis;
-import com.example.stockapi.entity.Symbol;
 import com.example.stockapi.tasks.AnalyzeTask;
 import com.example.stockapi.tasks.GatherTask;
 import lombok.extern.slf4j.Slf4j;
@@ -14,21 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 import com.example.stockapi.entity.GlobalQuote;
 import com.example.stockapi.models.StockSearches;
 import com.example.stockapi.models.Tickers;
 import com.example.stockapi.utility.Indicators;
-import com.example.stockapi.tasks.GatherTask;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,9 +32,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RestController
 @RequestMapping("stock")
 public class StockController {
-
-    @Autowired
-    private ApplicationConstants applicationConstants;
 
     @Autowired
     private Indicators indicators;
@@ -89,7 +80,7 @@ public class StockController {
         List<Tickers> searchList = new ArrayList<>();
 
         try{
-            final StockSearches response = restTemplate.getForObject(String.format(applicationConstants.AV_SYMBOL_SEARCH , symbol), StockSearches.class);
+            final StockSearches response = restTemplate.getForObject(String.format(ApplicationConstants.AV_SYMBOL_SEARCH , symbol), StockSearches.class);
             searchList = response.GrabMatches();
 
         } catch(Exception ex) {
@@ -124,7 +115,7 @@ public class StockController {
             LocalDateTime now = LocalDateTime.now();
 
             // retrieve stock quote information
-            quote = restTemplate.getForObject(String.format(applicationConstants.AV_GLOBAL_QUOTE, symbol), GlobalQuote.class);
+            quote = restTemplate.getForObject(String.format(ApplicationConstants.AV_GLOBAL_QUOTE, symbol), GlobalQuote.class);
             quote.tickerSymbol = symbol;
             quote.emaList = indicators.ExtractDailyEMA20(restTemplate, symbol);
             quote.macdList = indicators.ExtractDailyMACD(restTemplate, symbol);
