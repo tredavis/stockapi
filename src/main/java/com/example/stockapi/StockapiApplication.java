@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.web.client.RestTemplate;
 
-@Slf4j
+
 @SpringBootApplication
 @EnableMongoRepositories
 public class StockapiApplication {
@@ -20,12 +20,16 @@ public class StockapiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(StockapiApplication.class, args);
 
-		final String uri = "http://localhost:8080/stock/";
+		try {
+			final String uri = "http://localhost:8080/stock/";
 
-		RestTemplate restTemplate = new RestTemplate();
-		String result = restTemplate.getForObject(uri, String.class);
+			RestTemplate restTemplate = new RestTemplate();
+			String result = restTemplate.getForObject(uri, String.class);
 
-		System.out.println(result);
+			System.out.println(result);
+		}catch(Exception ex) {
+			System.out.println(ex);
+		}
 	}
 
 	@Bean

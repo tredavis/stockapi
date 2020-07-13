@@ -2,9 +2,11 @@ package com.example.stockapi.entity;
 
 import com.example.stockapi.utility.Rating;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
 @Data
+@ToString
 public class Symbol {
 
     @Id

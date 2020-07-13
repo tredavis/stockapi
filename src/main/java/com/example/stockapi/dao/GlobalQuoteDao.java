@@ -48,7 +48,7 @@ public class GlobalQuoteDao {
      * @param symbol Ticker symbol to search for.
      * @return Returns the quote for the ticker symbol from the database. If it exists.
      */
-    public GlobalQuote getQuoteByTickerAndDate(String symbol) {
+    public GlobalQuote getQuoteByTickerAndDateFromDb(String symbol) {
         log.info("Attempting getQuoteByTickerAndDate from db -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
         GlobalQuote globalQuote = new GlobalQuote();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
