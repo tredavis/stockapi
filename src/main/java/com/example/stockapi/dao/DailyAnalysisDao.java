@@ -57,16 +57,15 @@ public class DailyAnalysisDao {
         log.info("Finished saving the Daily Analysis to the database -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
     }
 
-    public DailyAnalysis grabBatchForProcessing () {
+    public DailyAnalysis grabBatchByDateForProcessing (String date) {
         log.info("Attempting to grabBatchForProcessing DailyAnalysis from the db -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
         List<DailyAnalysis> dailyAnalyses = new ArrayList<>();
         DailyAnalysis dailyAnalysis = new DailyAnalysis();
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime now = LocalDateTime.now();
+
 
         try {
             List<DailyAnalysis> result = mongoTemplate.query(DailyAnalysis.class)
-                    .matching(Query.query(where("recordedDate").is(dtf.format(now))))
+                    .matching(Query.query(where("recordedDate").is(date)))
                     .all();
 
             // did we find any?
