@@ -54,7 +54,7 @@ public class AnalyzeTask extends TimerTask {
     public void run() {
         log.info("Running analyze task-- " + new Timestamp(System.currentTimeMillis()));
 
-        DailyAnalysis dailyAnalysis = dailyAnalysisDao.grabTodayAnalysis();
+        DailyAnalysis dailyAnalysis = this.grabTodayAnalysis();
 
         if (dailyAnalysis != null && dailyAnalysis.dailyQuotes.size() > 0) {
 
@@ -62,9 +62,7 @@ public class AnalyzeTask extends TimerTask {
                 DailyQuote dailyQuote = dailyAnalysis.dailyQuotes.get(i);
                 String symbol = dailyAnalysis.dailyQuotes.get(i).ticker;
 
-                GlobalQuote quote = new GlobalQuote();
-
-                quote = this.extractQuote();
+                GlobalQuote quote = this.extractQuote(symbol);
 
                 // perform analysis
                 // we need a quote, ema and the macd values for the last 90 days
@@ -74,7 +72,7 @@ public class AnalyzeTask extends TimerTask {
                     // walk backwards and first search for the lowest and highest points.
                     // if you hit a value that is neither the highest or lowest point. Then we have a point of interest.
                     //
-                    this.analyseQuote();
+                     this.analyseQuote(dailyQuote, quote);
 
                     //sleep for a minute
                     try {
@@ -83,13 +81,18 @@ public class AnalyzeTask extends TimerTask {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                } else {
+                    log.info("There is no data to process for the day.");
                 }
             }
             log.info("Finished analyze task-- " + new Timestamp(System.currentTimeMillis()));
         }
     }
 
-        private GlobalQuote extractQuote () {
+    /*
+
+     */
+        private GlobalQuote extractQuote (String symbol) {
             GlobalQuote quote = new GlobalQuote();
 
             // check to see if there is already an entry in the database for the quote today/
@@ -129,6 +132,9 @@ public class AnalyzeTask extends TimerTask {
         }
 
 
+        /*
+
+         */
         private DailyAnalysis grabTodayAnalysis () {
             DailyAnalysis dailyAnalysis = new DailyAnalysis();
 
@@ -141,8 +147,10 @@ public class AnalyzeTask extends TimerTask {
             return dailyAnalysis;
         }
 
+        /*
 
-        private void analyseQuote () {
+         */
+        private void analyseQuote (DailyQuote dailyQuote , GlobalQuote quote) {
             LocalDate today = LocalDate.parse(quote.recordedDate);
             int daysInCycle = 0;
             Rating rating;

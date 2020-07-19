@@ -42,11 +42,13 @@ public class DailyAnalysisDao {
     public void save(DailyAnalysis dailyAnalysis) {
         log.info("Attempting to save the Daily Analysis to the database -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
         try {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDateTime now = LocalDateTime.now();
 
             // do we already have a batch for the day
-            DailyAnalysis da = this.grabBatchForProcessing();
+            DailyAnalysis da = this.grabBatchByDateForProcessing(dtf.format(now));
 
-            if(da == null) {
+            if(da.dailyQuotes.size() == 0) {
                 dailyAnalysisRepository.save(dailyAnalysis);
             } else {
                 log.info("This daily analysis is already present in the table " + " -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
