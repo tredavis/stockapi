@@ -54,8 +54,8 @@ public class StockController {
         GatherTask gatherQuotesFromDbTask = new GatherTask(symbolDao, dailyAnalysisDao);
         Timer gatherTimer = new Timer("gatherTimer");
 
-        long oneDay = 1000L * 60L * 60L * 24L;
-        gatherTimer.scheduleAtFixedRate(gatherQuotesFromDbTask, 1000L, oneDay);
+        log.info("Starting task:  Name -- " + gatherTimer.toString());
+        gatherTimer.scheduleAtFixedRate(gatherQuotesFromDbTask, 1000L, ApplicationConstants.MilliSecondsDay);
 
         TimeUnit.MILLISECONDS.sleep(10000L);
 
@@ -63,8 +63,8 @@ public class StockController {
         AnalyzeTask analyzeQuotesFromDbTask = new AnalyzeTask(globalQuoteDao, dailyAnalysisDao);
         Timer analyzeTimer = new Timer("analyzeTimer");
 
-        long oneMinute = 1000L * 60L;
-        analyzeTimer.scheduleAtFixedRate(analyzeQuotesFromDbTask, 1000L, oneMinute);
+        log.info("Starting task:  Name -- " + analyzeTimer.toString());
+        analyzeTimer.scheduleAtFixedRate(analyzeQuotesFromDbTask, 1000L, ApplicationConstants.MilliSecondsMinute);
 
         // task 3
 

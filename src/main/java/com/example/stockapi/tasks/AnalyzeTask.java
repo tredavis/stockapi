@@ -68,10 +68,6 @@ public class AnalyzeTask extends TimerTask {
                 // we need a quote, ema and the macd values for the last 90 days
                 if (quote.globalQuote != null && quote.emaList.size() > 0 && quote.macdList.size() > 0) {
 
-                    // analyze the MACD list first
-                    // walk backwards and first search for the lowest and highest points.
-                    // if you hit a value that is neither the highest or lowest point. Then we have a point of interest.
-                    //
                      this.analyseQuote(dailyQuote, quote);
 
                     //sleep for a minute
@@ -89,10 +85,72 @@ public class AnalyzeTask extends TimerTask {
         }
     }
 
+
     /*
 
      */
-        private GlobalQuote extractQuote (String symbol) {
+    private void analyseQuote (DailyQuote dailyQuote , GlobalQuote quote) {
+        LocalDate today = LocalDate.parse(quote.recordedDate);
+        int daysInCycle = 0;
+        Rating rating;
+        Trend currentTrend = Trend.NUETRAL;
+
+        for (int m = 0; m < quote.macdList.size(); m++) {
+            // we need to break before we hit an index out of bounds exception
+            if ((m + 1) == quote.macdList.size()) {
+                break;
+            }
+            MACD current = quote.macdList.get(m);
+            MACD previousDay = quote.macdList.get(m + 1);
+
+            Double currentValue = Double.parseDouble(current.macdHist);
+            Double previousValue = Double.parseDouble(previousDay.macdHist);
+
+            // the current value is greater than zero than we are either in an upward trend, upward peak, or upward fall.
+            // if we are in an upward trend we will see three (arbitrary) days of the previous values being lower or within decimals than the days before
+            if (currentValue >= 0) {
+
+                // possible upward trend
+                if (currentValue >= previousValue) {
+                    daysInCycle++;
+                    currentTrend = Trend.POSITIVEUPWARD;
+
+                    if (daysInCycle >= 3) {
+                        dailyQuote.trend = currentTrend;
+                        dailyQuote.rating = new BuyRating(true);
+                        break;
+                    }
+                }
+                // possible downward trend
+                else if (currentValue <= previousValue) {
+                    daysInCycle++;
+                    currentTrend = Trend.POSITIVEDOWNWARD;
+
+                    if (daysInCycle >= 3) {
+                        dailyQuote.trend = currentTrend;
+                        dailyQuote.rating = new SellRating(true);
+                        break;
+                    }
+                }
+
+            } else {
+                // if the current value is less than zero than we are either in a downward trend, downward peak, or downward fall.
+                // possible upward trend
+                if (currentValue >= previousValue) {
+
+                }
+                // possible downward trend
+                else if (currentValue <= previousValue) {
+
+                }
+            }
+        }
+    }
+
+    /*
+
+     */
+    private GlobalQuote extractQuote (String symbol) {
             GlobalQuote quote = new GlobalQuote();
 
             // check to see if there is already an entry in the database for the quote today/
@@ -131,80 +189,18 @@ public class AnalyzeTask extends TimerTask {
             return quote;
         }
 
+    /*
 
-        /*
+     */
+    private DailyAnalysis grabTodayAnalysis () {
+        DailyAnalysis dailyAnalysis = new DailyAnalysis();
 
-         */
-        private DailyAnalysis grabTodayAnalysis () {
-            DailyAnalysis dailyAnalysis = new DailyAnalysis();
-
-            try {
-                dailyAnalysis = dailyAnalysisDao.grabBatchByDateForProcessing(this.date);
-            } catch (Exception ex) {
-                log.info("There was an issue grabbing the batch for processing");
-            }
-
-            return dailyAnalysis;
+        try {
+            dailyAnalysis = dailyAnalysisDao.grabBatchByDateForProcessing(this.date);
+        } catch (Exception ex) {
+            log.info("There was an issue grabbing the batch for processing");
         }
 
-        /*
-
-         */
-        private void analyseQuote (DailyQuote dailyQuote , GlobalQuote quote) {
-            LocalDate today = LocalDate.parse(quote.recordedDate);
-            int daysInCycle = 0;
-            Rating rating;
-            Trend currentTrend = Trend.NUETRAL;
-            
-            for (int m = 0; m < quote.macdList.size(); m++) {
-                // we need to break before we hit an index out of bounds exception
-                if ((m + 1) == quote.macdList.size()) {
-                    break;
-                }
-                MACD current = quote.macdList.get(m);
-                MACD previousDay = quote.macdList.get(m + 1);
-
-                Double currentValue = Double.parseDouble(current.macdHist);
-                Double previousValue = Double.parseDouble(previousDay.macdHist);
-
-                // the current value is greater than zero than we are either in an upward trend, upward peak, or upward fall.
-                // if we are in an upward trend we will see three (arbitrary) days of the previous values being lower or within decimals than the days before
-                if (currentValue >= 0) {
-
-                    // possible upward trend
-                    if (currentValue >= previousValue) {
-                        daysInCycle++;
-                        currentTrend = Trend.POSITIVEUPWARD;
-
-                        if (daysInCycle >= 3) {
-                            dailyQuote.trend = currentTrend;
-                            dailyQuote.rating = new BuyRating(true);
-                            break;
-                        }
-                    }
-                    // possible downward trend
-                    else if (currentValue <= previousValue) {
-                        daysInCycle++;
-                        currentTrend = Trend.POSITIVEDOWNWARD;
-
-                        if (daysInCycle >= 3) {
-                            dailyQuote.trend = currentTrend;
-                            dailyQuote.rating = new SellRating(true);
-                            break;
-                        }
-                    }
-
-                } else {
-                    // if the current value is less than zero than we are either in a downward trend, downward peak, or downward fall.
-                    // possible upward trend
-                    if (currentValue >= previousValue) {
-
-                    }
-                    // possible downward trend
-                    else if (currentValue <= previousValue) {
-
-                    }
-                }
-            }
-        }
+        return dailyAnalysis;
+    }
 }

@@ -64,7 +64,6 @@ public class DailyAnalysisDao {
         List<DailyAnalysis> dailyAnalyses = new ArrayList<>();
         DailyAnalysis dailyAnalysis = new DailyAnalysis();
 
-
         try {
             List<DailyAnalysis> result = mongoTemplate.query(DailyAnalysis.class)
                     .matching(Query.query(where("recordedDate").is(date)))
