@@ -7,6 +7,7 @@ import com.example.stockapi.dao.GlobalQuoteDao;
 import com.example.stockapi.dao.SymbolDao;
 import com.example.stockapi.tasks.AnalyzeTask;
 import com.example.stockapi.tasks.GatherTask;
+import com.example.stockapi.utility.MessagingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,10 +46,15 @@ public class StockController {
     @Autowired
     private DailyAnalysisDao dailyAnalysisDao;
 
+    @Autowired
+    private MessagingService messagingService;
+
     RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping("/")
     public String init() throws InterruptedException {
+
+        messagingService.SendMessage("test");
 
         // task 1
         GatherTask gatherQuotesFromDbTask = new GatherTask(symbolDao, dailyAnalysisDao);
