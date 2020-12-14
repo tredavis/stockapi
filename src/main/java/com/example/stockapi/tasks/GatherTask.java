@@ -54,7 +54,7 @@ public class GatherTask extends TimerTask {
             log.error("There was an error attempting to grab the symbols " + ex);
         }
 
-        // walk through symbols
+        // walk through symbols to create a daily instance
         try {
             for (int i = 0; i < symbols.size(); i++) {
                 log.info("Adding ticker symbol name to daily analysis - " + symbols.get(i) + " " + new Timestamp(System.currentTimeMillis()));

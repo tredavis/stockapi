@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 public class ApplicationConstants {
      private final static String APIKey = "VTPCO5SG7C08XOT5";
 
+     public final static long MilliSecondsDay = 1000L * 60L * 60L * 24L;
+     public final static long MilliSecondsMinute = 1000L * 60L;
+
      public final static String AV_GLOBAL_QUOTE = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=%s&apikey=" + APIKey;
      public final static String AV_SYMBOL_SEARCH = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=%s&apikey=" + APIKey;
 

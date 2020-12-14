@@ -7,6 +7,7 @@ import com.example.stockapi.dao.GlobalQuoteDao;
 import com.example.stockapi.dao.SymbolDao;
 import com.example.stockapi.tasks.AnalyzeTask;
 import com.example.stockapi.tasks.GatherTask;
+import com.example.stockapi.utility.MessagingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,17 +46,23 @@ public class StockController {
     @Autowired
     private DailyAnalysisDao dailyAnalysisDao;
 
+    @Autowired
+    private MessagingService messagingService;
+
     RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping("/")
     public String init() throws InterruptedException {
 
+        // this was the beginning of adding twilio messaging to the application
+        messagingService.SendMessage("");
+
         // task 1
         GatherTask gatherQuotesFromDbTask = new GatherTask(symbolDao, dailyAnalysisDao);
         Timer gatherTimer = new Timer("gatherTimer");
 
-        long oneDay = 1000L * 60L * 60L * 24L;
-        gatherTimer.scheduleAtFixedRate(gatherQuotesFromDbTask, 1000L, oneDay);
+        log.info("Starting task:  Name -- " + gatherTimer.toString());
+        gatherTimer.scheduleAtFixedRate(gatherQuotesFromDbTask, 1000L, ApplicationConstants.MilliSecondsDay);
 
         TimeUnit.MILLISECONDS.sleep(10000L);
 
@@ -63,8 +70,8 @@ public class StockController {
         AnalyzeTask analyzeQuotesFromDbTask = new AnalyzeTask(globalQuoteDao, dailyAnalysisDao);
         Timer analyzeTimer = new Timer("analyzeTimer");
 
-        long oneMinute = 1000L * 60L;
-        analyzeTimer.scheduleAtFixedRate(analyzeQuotesFromDbTask, 1000L, oneMinute);
+        log.info("Starting task:  Name -- " + analyzeTimer.toString());
+        analyzeTimer.scheduleAtFixedRate(analyzeQuotesFromDbTask, 1000L, ApplicationConstants.MilliSecondsMinute);
 
         // task 3
 

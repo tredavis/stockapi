@@ -36,7 +36,13 @@ public class GlobalQuoteDao {
     public void saveQuote(GlobalQuote quote) {
         log.info("Attempting to save the Global Quote to the database -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
         try {
-            quoteRepository.save(quote);
+            GlobalQuote gq = this.getQuoteByTickerAndDateFromDb(quote.tickerSymbol);
+
+            if(gq != null) {
+                quoteRepository.save(quote);
+            } else {
+                log.info("This global quote is already present in the table " + " -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
+            }
         } catch (Exception ex){
             log.error("There was an issue saving the global quote to the database: " + ex.getMessage()+ " -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
         }
