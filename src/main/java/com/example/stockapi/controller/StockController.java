@@ -57,7 +57,7 @@ public class StockController {
         // this was the beginning of adding twilio messaging to the application
         messagingService.SendMessage("");
 
-        // task 1
+        // task 1 - grab existing quotes from database and prepare them for daily analysis (task 2)
         GatherTask gatherQuotesFromDbTask = new GatherTask(symbolDao, dailyAnalysisDao);
         Timer gatherTimer = new Timer("gatherTimer");
 
@@ -66,12 +66,12 @@ public class StockController {
 
         TimeUnit.MILLISECONDS.sleep(10000L);
 
-        // task 2
+        // task 2 - analyze the daily quotes and provide.
         AnalyzeTask analyzeQuotesFromDbTask = new AnalyzeTask(globalQuoteDao, dailyAnalysisDao);
         Timer analyzeTimer = new Timer("analyzeTimer");
 
         log.info("Starting task:  Name -- " + analyzeTimer.toString());
-        analyzeTimer.scheduleAtFixedRate(analyzeQuotesFromDbTask, 1000L, ApplicationConstants.MilliSecondsMinute);
+        analyzeTimer.scheduleAtFixedRate(analyzeQuotesFromDbTask, 1000L, ApplicationConstants.MilliSecondsDay);
 
         // task 3
 
