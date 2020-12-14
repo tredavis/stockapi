@@ -12,7 +12,8 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class MessagingService {
 
-    // Find your Account Sid and Auth Token at twilio.com/console
+    // In a production applicatoin this would go into a config file and not be uploaded to git.
+    // only sharing for interview purposes.
     public static final String ACCOUNT_SID = "AC96941a2f6813e33d7436e64145c32d47";
     public static final String AUTH_TOKEN =  "250b9f3d42be04c16d51913501e5a5c3";
 

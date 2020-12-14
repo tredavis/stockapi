@@ -54,7 +54,8 @@ public class StockController {
     @RequestMapping("/")
     public String init() throws InterruptedException {
 
-        messagingService.SendMessage("test");
+        // this was the beginning of adding twilio messaging to the application
+        messagingService.SendMessage("");
 
         // task 1
         GatherTask gatherQuotesFromDbTask = new GatherTask(symbolDao, dailyAnalysisDao);

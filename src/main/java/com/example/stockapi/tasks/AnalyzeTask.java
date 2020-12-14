@@ -54,11 +54,14 @@ public class AnalyzeTask extends TimerTask {
     public void run() {
         log.info("Running analyze task-- " + new Timestamp(System.currentTimeMillis()));
 
+        // grab today's batch
         DailyAnalysis dailyAnalysis = this.grabTodayAnalysis();
 
         if (dailyAnalysis != null && dailyAnalysis.dailyQuotes.size() > 0) {
 
             for (int i = 0; i < dailyAnalysis.dailyQuotes.size(); i++) {
+
+                // grab each quote, which contains the ticker symbol and perform analysis
                 DailyQuote dailyQuote = dailyAnalysis.dailyQuotes.get(i);
                 String symbol = dailyAnalysis.dailyQuotes.get(i).ticker;
 
@@ -72,7 +75,10 @@ public class AnalyzeTask extends TimerTask {
 
                     //sleep for a minute
                     try {
+
+                        // the sleeping hear was to do rate limiting from alpha advantage.
                         TimeUnit.MILLISECONDS.sleep(60000L);
+
                         log.info("Still processing but asleep for a minute");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
