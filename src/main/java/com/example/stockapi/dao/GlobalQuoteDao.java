@@ -41,12 +41,12 @@ public class GlobalQuoteDao {
             if(gq != null) {
                 quoteRepository.save(quote);
             } else {
-                log.info("This global quote is already present in the table " + " -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
+                log.info("saveQuote: This global quote is already present in the table " + " -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
             }
         } catch (Exception ex){
-            log.error("There was an issue saving the global quote to the database: " + ex.getMessage()+ " -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
+            log.error("saveQuote: There was an issue saving the global quote to the database: " + ex.getMessage()+ " -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
         }
-        log.info("Finished saving the Global Quote to the database -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
+        log.info("saveQuote: Finished saving the Global Quote to the database -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
     }
 
     /***
@@ -67,10 +67,10 @@ public class GlobalQuoteDao {
 
             // did we find any?
             if(result.size() > 0){
-               log.info("quote was found returning...");
+               log.info("getQuoteByTickerAndDateFromDb: quote was found returning...");
                globalQuote = result.get(0);
             } else {
-                log.info("No data was found");
+                log.info("getQuoteByTickerAndDateFromDb: No data was found");
             }
 
         } catch (Exception ex){

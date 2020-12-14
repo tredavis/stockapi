@@ -35,11 +35,11 @@ public class SymbolDao {
             if(result.size() > 0){
                 symbols = result;
             } else {
-                log.warn("There was no symbols found in the database.");
+                log.warn("There were no symbols found in the database.");
             }
 
         } catch (Exception ex) {
-            log.error("There was an grabbing the symbols from the db: " + ex.getMessage() + " -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
+            log.error("There was an error grabbing the symbols from the db: " + ex.getMessage() + " -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
         }
 
         log.info("Finished grabbing unique symbols from the db -- Timestamp: " + new Timestamp(System.currentTimeMillis()));
